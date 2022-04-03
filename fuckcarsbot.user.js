@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         /r/fuckcars Bot
 // @namespace    https://github.com/fockcors/Bot
-// @version      17
+// @version      19
 // @description  The bot for r/fuckcars!
 // @author       NoahvdAa/fockcors
 // @match        https://www.reddit.com/r/place/*
@@ -23,6 +23,9 @@ var accessToken;
 var currentOrderCanvas = document.createElement('canvas');
 var currentOrderCtx = currentOrderCanvas.getContext('2d');
 var currentPlaceCanvas = document.createElement('canvas');
+
+// Global constants
+const DEFAULT_TOAST_DURATION_MS = 10000;
 
 const COLOR_MAPPINGS = {
     '#BE0039': 1,
@@ -84,12 +87,12 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
 
     Toastify({
         text: 'Accesstoken ophalen...',
-        duration: 10000
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
     accessToken = await getAccessToken();
     Toastify({
         text: 'Accesstoken opgehaald!',
-        duration: 10000
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
 
     connectSocket();
@@ -105,19 +108,19 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
 
 function connectSocket() {
     Toastify({
-        text: 'Verbinden met fockcors server...',
-        duration: 10000
+        text: 'Verbinden met fuckcars server...',
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
 
     socket = new WebSocket('wss://placefc.herokuapp.com/api/ws');
 
     socket.onopen = function () {
         Toastify({
-            text: 'Verbonden met fockcors server!',
-            duration: 10000
+            text: 'Verbonden met fuckcars server!',
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         socket.send(JSON.stringify({ type: 'getmap' }));
-        socket.send(JSON.stringify({ type: 'brand', brand: 'userscriptV17' }));
+        socket.send(JSON.stringify({ type: 'brand', brand: 'userscriptV19' }));
     };
 
     socket.onmessage = async function (message) {
@@ -132,13 +135,20 @@ function connectSocket() {
             case 'map':
                 Toastify({
                     text: `Nieuwe map laden (reden: ${data.reason ? data.reason : 'verbonden met server'})...`,
-                    duration: 10000
+                    duration: DEFAULT_TOAST_DURATION_MS
                 }).showToast();
                 currentOrderCtx = await getCanvasFromUrl(`https://placefc.herokuapp.com/maps/${data.data}`, currentOrderCanvas, 0, 0, true);
                 order = getRealWork(currentOrderCtx.getImageData(0, 0, 2000, 1000).data);
                 Toastify({
                     text: `Nieuwe map geladen, ${order.length} pixels in totaal`,
-                    duration: 10000
+                    duration: DEFAULT_TOAST_DURATION_MS
+                }).showToast();
+                break;
+            case 'toast':
+                Toastify({
+                    text: `Bericht van server: ${data.message}`,
+                    duration: data.duration || DEFAULT_TOAST_DURATION_MS,
+                    style: data.style || {}
                 }).showToast();
                 break;
             default:
@@ -148,8 +158,8 @@ function connectSocket() {
 
     socket.onclose = function (e) {
         Toastify({
-            text: `fockcors server heeft de verbinding verbroken: ${e.reason}`,
-            duration: 10000
+            text: `fuckcars server heeft de verbinding verbroken: ${e.reason}`,
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         console.error('Socketfout: ', e.reason);
         socket.close();
@@ -170,7 +180,7 @@ async function attemptPlace() {
         console.warn('Fout bij ophalen map: ', e);
         Toastify({
             text: 'Fout bij ophalen map. Opnieuw proberen in 10 sec...',
-            duration: 10000
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         setTimeout(attemptPlace, 10000); // probeer opnieuw in 10sec.
         return;
@@ -199,7 +209,7 @@ async function attemptPlace() {
 
     Toastify({
         text: `Proberen pixel te plaatsen op ${x}, ${y}... (${percentComplete}% compleet, nog ${workRemaining} over)`,
-        duration: 10000
+        duration: DEFAULT_TOAST_DURATION_MS
     }).showToast();
 
     const res = await place(x, y, COLOR_MAPPINGS[hex]);
@@ -210,18 +220,20 @@ async function attemptPlace() {
             const nextPixel = error.extensions.nextAvailablePixelTs + 3000;
             const nextPixelDate = new Date(nextPixel);
             const delay = nextPixelDate.getTime() - Date.now();
+            const toast_duration = delay > 0 ? delay : DEFAULT_TOAST_DURATION_MS;
             Toastify({
                 text: `Pixel te snel geplaatst! Volgende pixel wordt geplaatst om ${nextPixelDate.toLocaleTimeString()}.`,
-                duration: delay
+                duration: toast_duration
             }).showToast();
             setTimeout(attemptPlace, delay);
         } else {
             const nextPixel = data.data.act.data[0].data.nextAvailablePixelTimestamp + 3000;
             const nextPixelDate = new Date(nextPixel);
             const delay = nextPixelDate.getTime() - Date.now();
+            const toast_duration = delay > 0 ? delay : DEFAULT_TOAST_DURATION_MS;
             Toastify({
                 text: `Pixel geplaatst op ${x}, ${y}! Volgende pixel wordt geplaatst om ${nextPixelDate.toLocaleTimeString()}.`,
-                duration: delay
+                duration: toast_duration
             }).showToast();
             setTimeout(attemptPlace, delay);
         }
@@ -229,7 +241,7 @@ async function attemptPlace() {
         console.warn('Fout bij response analyseren', e);
         Toastify({
             text: `Fout bij response analyseren: ${e}.`,
-            duration: 10000
+            duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         setTimeout(attemptPlace, 10000);
     }
