@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         /r/fuckcars Bot
 // @namespace    https://github.com/fockcors/Bot
-// @version      19
+// @version      19.1
 // @description  The bot for r/fuckcars!
 // @author       NoahvdAa/fockcors
 // @match        https://www.reddit.com/r/place/*
