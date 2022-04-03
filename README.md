@@ -2,7 +2,7 @@
 
 The bot for fockcors and their allies! This bot connects with the [command server](https://github.com/fockcors/Commando) and gets it's orders from there.
 
-This is a copy of https://github.com/PlaceNL/Bot
+Command Server: https://placefc.herokuapp.com/
 
 ## User script bot
 

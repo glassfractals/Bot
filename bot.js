@@ -62,7 +62,7 @@ const COLOR_MAPPINGS = {
 function connectSocket() {
     console.log('Verbinden met fuckcars server...')
 
-    socket = new WebSocket('wss://fuckcars.noahvdaa.me/api/ws');
+    socket = new WebSocket('wss://placefc.herokuapp.com/api/ws');
 
     socket.onerror = function(e) {
         console.error("Socket error: " + e.message)
@@ -84,7 +84,7 @@ function connectSocket() {
         switch (data.type.toLowerCase()) {
             case 'map':
                 console.log(`Nieuwe map geladen (reden: ${data.reason ? data.reason : 'verbonden met server'})`)
-                currentOrders = await getMapFromUrl(`https://fuckcars.noahvdaa.me/maps/${data.data}`);
+                currentOrders = await getMapFromUrl(`https://placefc.herokuapp.com/maps/${data.data}`);
                 hasOrders = true;
                 break;
             default:
