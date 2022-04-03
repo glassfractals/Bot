@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         /r/fuckcars Bot
 // @namespace    https://github.com/fockcors/Bot
-// @version      13
+// @version      17
 // @description  The bot for r/fuckcars!
 // @author       NoahvdAa/fockcors
 // @match        https://www.reddit.com/r/place/*
@@ -98,6 +98,9 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
     setInterval(() => {
         if (socket) socket.send(JSON.stringify({ type: 'ping' }));
     }, 5000);
+    setInterval(async () => {
+        accessToken = await getAccessToken();
+    }, 30 * 60 * 1000)
 })();
 
 function connectSocket() {
@@ -114,6 +117,7 @@ function connectSocket() {
             duration: 10000
         }).showToast();
         socket.send(JSON.stringify({ type: 'getmap' }));
+        socket.send(JSON.stringify({ type: 'brand', brand: 'userscriptV17' }));
     };
 
     socket.onmessage = async function (message) {
@@ -130,7 +134,7 @@ function connectSocket() {
                     text: `Nieuwe map laden (reden: ${data.reason ? data.reason : 'verbonden met server'})...`,
                     duration: 10000
                 }).showToast();
-                currentOrderCtx = await getCanvasFromUrl(`https://placefc.herokuapp.com/maps/${data.data}`, currentOrderCanvas);
+                currentOrderCtx = await getCanvasFromUrl(`https://placefc.herokuapp.com/maps/${data.data}`, currentOrderCanvas, 0, 0, true);
                 order = getRealWork(currentOrderCtx.getImageData(0, 0, 2000, 1000).data);
                 Toastify({
                     text: `Nieuwe map geladen, ${order.length} pixels in totaal`,
@@ -160,8 +164,8 @@ async function attemptPlace() {
     }
     var ctx;
     try {
-        ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), currentPlaceCanvas, 0, 0);
-        ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), currentPlaceCanvas, 1000, 0)
+        ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), currentPlaceCanvas, 0, 0, false);
+        ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), currentPlaceCanvas, 1000, 0, false)
     } catch (e) {
         console.warn('Fout bij ophalen map: ', e);
         Toastify({
@@ -186,6 +190,7 @@ async function attemptPlace() {
     }
 
     const percentComplete = 100 - Math.ceil(work.length * 100 / order.length);
+    const workRemaining = work.length;
     const idx = Math.floor(Math.random() * work.length);
     const i = work[idx];
     const x = i % 2000;
@@ -193,7 +198,7 @@ async function attemptPlace() {
     const hex = rgbaOrderToHex(i, rgbaOrder);
 
     Toastify({
-        text: `Proberen pixel te plaatsen op ${x}, ${y}... (${percentComplete}% compleet)`,
+        text: `Proberen pixel te plaatsen op ${x}, ${y}... (${percentComplete}% compleet, nog ${workRemaining} over)`,
         duration: 10000
     }).showToast();
 
@@ -317,12 +322,15 @@ async function getCurrentImageUrl(id = '0') {
     });
 }
 
-function getCanvasFromUrl(url, canvas, x = 0, y = 0) {
+function getCanvasFromUrl(url, canvas, x = 0, y = 0, clearCanvas = false) {
     return new Promise((resolve, reject) => {
         let loadImage = ctx => {
             var img = new Image();
             img.crossOrigin = 'anonymous';
             img.onload = () => {
+                if (clearCanvas) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
                 ctx.drawImage(img, x, y);
                 resolve(ctx);
             };
