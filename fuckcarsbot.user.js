@@ -3,7 +3,7 @@
 // @namespace    https://github.com/fockcors/Bot
 // @version      13
 // @description  The bot for r/fuckcars!
-// @author       NoahvdAa / fockcors
+// @author       NoahvdAa/fockcors
 // @match        https://www.reddit.com/r/place/*
 // @match        https://new.reddit.com/r/place/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
