@@ -1,6 +1,6 @@
-# /r/fuckcars Bot 
+# r/fuckcars Bot for r/place
 
-The bot for fockcors and their allies! This bot connects with the [command server](https://github.com/fockcors/Commando) and gets it's orders from there.
+The bot for r/fuckcars and their allies! This bot connects with the [command server](https://github.com/fockcors/Commando) and gets it's orders from there.
 
 Command Server: https://placefc.herokuapp.com/
 
