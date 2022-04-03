@@ -4,6 +4,8 @@ The bot for fockcors and their allies! This bot connects with the [command serve
 
 Command Server: https://placefc.herokuapp.com/
 
+*This project is a copy of https://github.com/PlaceNL/Bot* - 🇳🇱 Thanks a lot! 🇳🇱
+
 ## User script bot
 
 ### Installation instructions
