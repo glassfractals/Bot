@@ -375,7 +375,7 @@ function getCanvasFromUrl(url, canvas, x = 0, y = 0, clearCanvas = false) {
             };
             img.onerror = () => {
                 Toastify({
-                    text: 'Error retrieving folder. Trying again in 3 sec... ',
+                    text: 'Error retrieving map. Trying again in 3 sec... ',
                     duration: 3000
                 }).showToast();
                 setTimeout(() => loadImage(ctx), 3000);
