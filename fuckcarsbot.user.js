@@ -230,13 +230,13 @@ async function attemptPlace() {
 
     // Brute force through all pending work to get just the ones in coord zone
     for (let i = 0; i < work.length; i++) {
-        if work[i].x >= priorityAreaCoords.minX && work[i].x <= priorityAreaCoords.maxX
-        && work[i].y >= priorityAreaCoords.minY && work[i].y <= priorityAreaCoords.Y {
+        if (work[i].x >= priorityAreaCoords.minX && work[i].x <= priorityAreaCoords.maxX
+        && work[i].y >= priorityAreaCoords.minY && work[i].y <= priorityAreaCoords.Y) {
             priorityWork.push(work[i])
         }
     }
 
-    if priorityWork.length > 0 {
+    if (priorityWork.length > 0) {
         subsetWork = priorityWork
 
         console.log("High priority work exists")
