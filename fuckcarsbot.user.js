@@ -212,6 +212,8 @@ async function attemptPlace() {
         return;
     }
 
+    console.log(work)
+
     // Hack to prioritize work in a certain coordinate zone
     // Hard-coded coordinates for now.
     // From roughly the middle of the F to the bottom of the R, to catch weird extensions of letters like FuckEars
@@ -223,8 +225,8 @@ async function attemptPlace() {
         maxY: 769,
     }
 
-    var subsetWork = []
-    var priorityWork = []
+    const subsetWork = []
+    const priorityWork = []
 
     // Brute force through all pending work to get just the ones in coord zone
     for (let i = 0; i < work.length; i++) {
@@ -237,6 +239,8 @@ async function attemptPlace() {
     if priorityWork.length > 0 {
         subsetWork = priorityWork
 
+        console.log("High priority work exists")
+
         Toastify({
             text: `High priority work detected near logo.`,
             duration: DEFAULT_TOAST_DURATION_MS
@@ -245,8 +249,6 @@ async function attemptPlace() {
         // No high priority work, just use the normal pile
         subsetWork = work
     }
-
-    console.log()
 
     const percentComplete = 100 - Math.ceil(work.length * 100 / order.length);
     const workRemaining = work.length;
