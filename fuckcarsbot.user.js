@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         /r/fuckcars Bot
 // @namespace    https://github.com/fockcors/Bot
-// @version      23
+// @version      26
 // @description  The bot for r/fuckcars!
 // @author       NoahvdAa/fockcors
 // @match        https://www.reddit.com/r/place/*
@@ -110,7 +110,7 @@ let getPendingWork = (work, rgbaOrder, rgbaCanvas) => {
     attemptPlace();
 
     setInterval(() => {
-        if (socket) socket.send(JSON.stringify({ type: 'ping' }));
+        if (socket && socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: 'ping' }));
     }, 5000);
     setInterval(async () => {
         accessToken = await getAccessToken();
@@ -131,7 +131,7 @@ function connectSocket() {
             duration: DEFAULT_TOAST_DURATION_MS
         }).showToast();
         socket.send(JSON.stringify({ type: 'getmap' }));
-        socket.send(JSON.stringify({ type: 'brand', brand: 'userscriptV23' }));
+        socket.send(JSON.stringify({ type: 'brand', brand: 'userscriptV26' }));
     };
 
     socket.onmessage = async function (message) {
@@ -240,9 +240,9 @@ async function attemptPlace() {
             }).showToast();
             setTimeout(attemptPlace, delay);
         } else {
-            const nextPixel = data.data.act.data[0].data.nextAvailablePixelTimestamp + 3000;
+            const nextPixel = data.data.act.data[0].data.nextAvailablePixelTimestamp + 3000 + Math.floor(Math.random() * 10000); // Random tijd toevoegen tussen 0 en 10 sec om detectie te voorkomen en te spreiden na server herstart.
             const nextPixelDate = new Date(nextPixel);
-            const delay = nextPixelDate.getTime() - Date.now();
+            const delay = nextPixelDate.getTime() - Date.now(); 
             const toast_duration = delay > 0 ? delay : DEFAULT_TOAST_DURATION_MS;
             Toastify({
                 text: `Pixel placed on ${x}, ${y}! Next pixel will be placed at ${nextPixelDate.toLocaleTimeString()}.`,
