@@ -212,10 +212,46 @@ async function attemptPlace() {
         return;
     }
 
+    // Hack to prioritize work in a certain coordinate zone
+    // Hard-coded coordinates for now.
+    // From roughly the middle of the F to the bottom of the R, to catch weird extensions of letters like FuckEars
+
+    const priorityAreaCoords = {
+        minX: 1006,
+        maxX: 1089,
+        minY: 752,
+        maxY: 769,
+    }
+
+    let subsetWork = []
+    let priorityWork = []
+
+    // Brute force through all pending work to get just the ones in coord zone
+    for (let i = 0; i < work.length; i++) {
+        if work[i].x >= priorityAreaCoords.minX && work[i].x <= priorityAreaCoords.maxX
+        && work[i].y >= priorityAreaCoords.minY && work[i].y <= priorityAreaCoords.Y {
+            priorityWork.push(work[i])
+        }
+    }
+
+    if priorityWork.length > 0 {
+        subsetWork = priorityWork
+
+        Toastify({
+            text: `High priority work detected near logo.`,
+            duration: DEFAULT_TOAST_DURATION_MS
+        }).showToast();
+    } else {
+        // No high priority work, just use the normal pile
+        subsetWork = work
+    }
+
+    console.log()
+
     const percentComplete = 100 - Math.ceil(work.length * 100 / order.length);
     const workRemaining = work.length;
-    const idx = Math.floor(Math.random() * work.length);
-    const i = work[idx];
+    const idx = Math.floor(Math.random() * subsetWork.length);
+    const i = subsetWork[idx];
     const x = i % 2000;
     const y = Math.floor(i / 2000);
     const hex = rgbaOrderToHex(i, rgbaOrder);
