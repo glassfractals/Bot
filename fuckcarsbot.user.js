@@ -237,7 +237,7 @@ async function attemptPlace() {
         console.log(`Checking work item: ${workItem}, ${workItemX}, ${workItemY}`)
 
         if (workItemX >= priorityAreaCoords.minX && workItemX <= priorityAreaCoords.maxX
-        && workItemY >= priorityAreaCoords.minY && workItemY <= priorityAreaCoords.Y) {
+        && workItemY >= priorityAreaCoords.minY && workItemY <= priorityAreaCoords.maxY) {
             priorityWork.push(workItem)
         }
     }
