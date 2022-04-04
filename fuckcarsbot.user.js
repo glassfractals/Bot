@@ -253,6 +253,7 @@ async function attemptPlace() {
         }).showToast();
     } else {
         // No high priority work, just use the normal pile
+        console.log("No high priority work to do.")
         subsetWork = work
     }
 
