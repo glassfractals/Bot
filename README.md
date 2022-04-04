@@ -6,6 +6,8 @@ Command Server: https://placefc.herokuapp.com/
 
 *This project is a copy of https://github.com/PlaceNL/Bot* - 🇳🇱 Thanks a lot! 🇳🇱
 
+IF you want to help with maintaining this project, look into DEVELOPMENT.md.
+
 ## User script bot
 
 ### Installation instructions
