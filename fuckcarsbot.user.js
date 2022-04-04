@@ -234,7 +234,7 @@ async function attemptPlace() {
         let workItemX = workItem % 2000
         let workItemY = Math.floor(workItem / 2000);
 
-        cosole.log(`Checking work item: ${workItem}, ${workItemX}, ${workItemY}`)
+        console.log(`Checking work item: ${workItem}, ${workItemX}, ${workItemY}`)
 
         if (workItemX >= priorityAreaCoords.minX && workItemX <= priorityAreaCoords.maxX
         && workItemY >= priorityAreaCoords.minY && workItemY <= priorityAreaCoords.Y) {
