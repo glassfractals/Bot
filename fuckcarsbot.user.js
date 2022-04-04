@@ -225,14 +225,16 @@ async function attemptPlace() {
         maxY: 769,
     }
 
-    const subsetWork = []
-    const priorityWork = []
+    var subsetWork = []
+    var priorityWork = []
 
     // Brute force through all pending work to get just the ones in coord zone
     for (let i = 0; i < work.length; i++) {
         let workItem = work[i]
         let workItemX = workItem % 2000
         let workItemY = Math.floor(workItem / 2000);
+
+        cosole.log(`Checking work item: ${workItem}, ${workItemX}, ${workItemY}`)
 
         if (workItemX >= priorityAreaCoords.minX && workItemX <= priorityAreaCoords.maxX
         && workItemY >= priorityAreaCoords.minY && workItemY <= priorityAreaCoords.Y) {
