@@ -212,8 +212,6 @@ async function attemptPlace() {
         return;
     }
 
-    console.log(work)
-
     // Hack to prioritize work in a certain coordinate zone
     // Hard-coded coordinates for now.
     // From roughly the middle of the F to the bottom of the R, to catch weird extensions of letters like FuckEars
